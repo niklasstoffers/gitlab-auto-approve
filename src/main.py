@@ -1,11 +1,13 @@
-from fastapi import FastAPI, Depends, Request, Header, HTTPException, status
+from fastapi import FastAPI, Depends, Header, HTTPException, status
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from typing import Annotated
 from comment_event import CommentEvent
 from config import config
 from gitlab_client import gl
 from gitlab.v4.objects import Project, ProjectMergeRequest
-from fastapi.middleware.cors import CORSMiddleware
-import os
+from urllib.parse import urlparse
 import uvicorn
 
 async def verify_token(x_gitlab_token: Annotated[str | None, Header()] = None):
@@ -30,14 +32,15 @@ async def approve(event: CommentEvent):
         merge_request.notes.create({'body': config.approval.message})
     merge_request.approve()
 
-enable_ssl = os.environ.get('USE_SSL', 'false').lower() == 'true'
-ssl_keyfile = None
-ssl_certfile = None
-if enable_ssl:
-    ssl_keyfile = os.environ.get('SSL_KEYFILE')
-    ssl_certfile = os.environ.get('SSL_CERTFILE')
+app = None
+if config.ssl.enable:
+    app = FastAPI(ssl_keyfile=config.ssl.key_file, ssl_certfile=config.ssl.cert_file)
+    app.add_middlware(HTTPSRedirectMiddleware)
+else:
+    app = FastAPI()
 
-app = FastAPI(ssl_keyfile=ssl_keyfile,ssl_certfile=ssl_certfile)
+if config.trusted_hosts_only:
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=[urlparse(config.gitlab_host).netloc])
 
 origins = [config.gitlab_host]
 app.add_middleware(
@@ -57,4 +60,7 @@ async def root(event: CommentEvent):
             raise Exception("Failed to approve merge request")
         
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=80, ssl_keyfile=ssl_keyfile, ssl_certfile=ssl_certfile)
+    if config.ssl.enable:
+        uvicorn.run("main:app", host="0.0.0.0", port=80, ssl_keyfile=config.ssl.key_file, ssl_certfile=config.ssl.cert_file)
+    else:
+        uvicorn.run("main:app", host="0.0.0.0", port=80)

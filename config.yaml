@@ -1,6 +1,11 @@
 gitlab_host: https://gitlab.com/
-access_token: <access_token>
-webhook_token: <webhook_token>
+access_token: abc
+webhook_token: abc
+trusted_hosts_only: true
+ssl:
+  enable: false
+  key_file: /path/to/keyfile
+  cert_file: /path/to/certfile
 approval:
   keyword: lgtm
   ignore_case: true

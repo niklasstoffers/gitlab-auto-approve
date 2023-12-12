@@ -16,3 +16,6 @@ rebuild: ## Build application without cache
 
 run: ## Run application
 	@docker-compose --env-file $(ENV_FILE) up
+
+publish: ## Publish application
+	@./publish.sh
