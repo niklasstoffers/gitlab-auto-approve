@@ -1,0 +1,26 @@
+name: Auto approve
+
+on:
+  issue_comment:
+    types:
+      - created
+
+jobs:
+  auto-approve:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    steps:
+      - uses: actions/github-script@v7
+        name: LGTM Auto Approve
+        if: github.actor_id == github.repository_owner_id && contains(github.event.comment.body, 'LGTM')
+        with:
+          script: |
+            github.rest.pulls.createReview({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              pull_number: context.issue.number,
+              review_id: 1,
+              event: 'APPROVE',
+              body: '![lgtm](https://media2.giphy.com/media/NytMLKyiaIh6VH9SPm/giphy.gif?cid=ecf05e47d9ttw0m7xov7ez4kh01r3x84hrwzycd46ucfo0v8&ep=v1_gifs_search&rid=giphy.gif&ct=g)'
+            })

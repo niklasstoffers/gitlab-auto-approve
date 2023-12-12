@@ -44,6 +44,9 @@ def load_env(config: Config):
     config.approval.strict_match = environ.get('APPROVAL_STRICT_MATCH', config.approval.strict_match)
     config.approval.only_for_members = get_list_env('APPROVAL_ONLY_FOR_MEMBERS', config.approval.only_for_members)
     config.approval.message = environ.get('APPROVAL_MESSAGE', config.approval.message)
+    
+    if config.approval.message is not None and len(config.approval.message.strip()) == 0:
+        config.approval.message = None
 
 
 def load_config(filename: str = "config.yaml") -> Config:
