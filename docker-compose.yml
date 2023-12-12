@@ -6,3 +6,7 @@ services:
     build: .
     ports:
       - '${APP_PORT}:80'
+    environment:
+      - USE_SSL=${USE_SSL}
+      - SSL_KEYFILE=${SSL_KEYFILE}
+      - SSL_CERTFILE=${SSL_CERTFILE}

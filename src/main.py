@@ -4,6 +4,9 @@ from comment_event import CommentEvent
 from config import config
 from gitlab_client import gl
 from gitlab.v4.objects import Project, ProjectMergeRequest
+from fastapi.middleware.cors import CORSMiddleware
+import os
+import uvicorn
 
 async def verify_token(x_gitlab_token: Annotated[str | None, Header()] = None):
     if x_gitlab_token is None or x_gitlab_token != config.webhook_token:
@@ -27,7 +30,23 @@ async def approve(event: CommentEvent):
         merge_request.notes.create({'body': config.approval.message})
     merge_request.approve()
 
-app = FastAPI()
+enable_ssl = os.environ.get('USE_SSL', 'false').lower() == 'true'
+ssl_keyfile = None
+ssl_certfile = None
+if enable_ssl:
+    ssl_keyfile = os.environ.get('SSL_KEYFILE')
+    ssl_certfile = os.environ.get('SSL_CERTFILE')
+
+app = FastAPI(ssl_keyfile=ssl_keyfile,ssl_certfile=ssl_certfile)
+
+origins = [config.gitlab_host]
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 @app.post("/approve-merge", dependencies = [Depends(verify_token)])
 async def root(event: CommentEvent):
@@ -36,3 +55,6 @@ async def root(event: CommentEvent):
             approve(event)
         except:
             raise Exception("Failed to approve merge request")
+        
+if __name__ == "__main__":
+    uvicorn.run("main:app", host="0.0.0.0", port=80, ssl_keyfile=ssl_keyfile, ssl_certfile=ssl_certfile)
