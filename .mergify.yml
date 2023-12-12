@@ -4,8 +4,7 @@ pull_request_rules:
       - author=niklasstoffers
       - "#approved-reviews-by>=1"
       - check-success=build
-      - check-success=test
-      - base=main
+      - "-label=noautomerge"
     actions:
       merge:
         method: merge
@@ -13,8 +12,13 @@ pull_request_rules:
     conditions:
       - "approved-reviews-by=[niklasstoffers]"
       - check-success=build
-      - check-success=test
-      - base=main
+      - "-label=noautomerge"
     actions:
       merge:
         method: merge
+  - name: Automatic cleanup 🗑️ after merge
+    conditions:
+      - merged
+      - "-label=nocleanup"
+    actions:
+      delete_head_branch:
