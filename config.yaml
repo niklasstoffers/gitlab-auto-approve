@@ -1,0 +1,9 @@
+gitlab_host: https://gitlab.com/
+access_token: <access_token>
+webhook_token: <webhook_token>
+approval:
+  keyword: lgtm
+  ignore_case: true
+  strict_match: true
+  only_for_members: null
+  message: Merge request has been approved.

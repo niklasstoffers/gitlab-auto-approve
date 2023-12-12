@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  gitlab-auto-approve:
+    container_name: gitlab-auto-approve
+    image: gitlab-auto-approve
+    build: .
+    ports:
+      - '${APP_PORT}:80'
