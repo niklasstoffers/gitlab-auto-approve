@@ -10,7 +10,7 @@ from gitlab.v4.objects import Project, ProjectMergeRequest
 from urllib.parse import urlparse
 import uvicorn
 
-async def verify_token(x_gitlab_token: Annotated[str | None, Header()] = None):
+async def verify_token(x_gitlab_token: Annotated[str | None, Header(alias = 'X-Gitlab-Token')] = None):
     if x_gitlab_token is None or x_gitlab_token != config.webhook_token:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
 
@@ -27,7 +27,7 @@ def check_author(event: CommentEvent):
 
 def approve(event: CommentEvent):
     project: Project = gl.projects.get(event.project.id)
-    merge_request: ProjectMergeRequest = project.mergerequests.get(event.merge_request.id)
+    merge_request: ProjectMergeRequest = project.mergerequests.get(event.merge_request.iid)
     if config.approval.message is not None:
         merge_request.notes.create({'body': config.approval.message})
     merge_request.approve()
@@ -35,7 +35,7 @@ def approve(event: CommentEvent):
 app = None
 if config.ssl.enable:
     app = FastAPI(ssl_keyfile=config.ssl.key_file, ssl_certfile=config.ssl.cert_file)
-    app.add_middlware(HTTPSRedirectMiddleware)
+    app.add_middleware(HTTPSRedirectMiddleware)
 else:
     app = FastAPI()
 

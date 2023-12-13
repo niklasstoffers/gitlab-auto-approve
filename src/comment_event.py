@@ -10,7 +10,7 @@ class ObjectAttributes(BaseModel):
     note: str
 
 class MergeRequest(BaseModel):
-    id: int
+    iid: int
 
 class CommentEvent(BaseModel):
     user: User

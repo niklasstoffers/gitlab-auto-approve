@@ -4,6 +4,7 @@ services:
     container_name: gitlab-auto-approve
     image: gitlab-auto-approve
     build: .
+    restart: always
     ports:
       - '${APP_PORT}:80'
     environment:
