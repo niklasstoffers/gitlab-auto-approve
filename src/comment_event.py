@@ -16,4 +16,4 @@ class CommentEvent(BaseModel):
     user: User
     project: Project
     object_attributes: ObjectAttributes
-    merge_request: MergeRequest
+    merge_request: MergeRequest | None
