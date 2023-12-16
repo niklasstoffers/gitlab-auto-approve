@@ -111,6 +111,7 @@ You can use the following configuration options to configure the bot to your spe
 | `approval.strict_match` | `APPROVAL_STRICT_MATCH` | If set to `true` the bot will only approve when the comment **only** contains the keyword. If set to `false` the keyword only needs to be present in the merge request comment |
 | `approval.only_for_members` | `APPROVAL_ONLY_FOR_MEMBERS` | Comma-separated list of Gitlab usernames. If specified the bot will only approve when the comment author is in the username list. |
 | `approval.message` | `APPROVAL_MESSAGE` | Comment message that the bot will create after approving the merge request. If left empty the bot won't send a message at all. |
+| `uvicorn.reload` | `UVICORN_RELOAD` | If set to `true` uvicorn will reload the server upon file change. This should be set to `false` in production environments but is a useful setting for development. |
 
 ### HTTPS
 
@@ -119,4 +120,4 @@ To use HTTPS with the bot you will need to enable SSL via the configuration opti
 <br>
 
 > [!WARNING]   
-> We strongly recommend enabling HTTPS as traffic will be unencrypted and publicly visible otherwise. This traffic will include confidential information such as usernames, project names and more!
+> We strongly recommend enabling HTTPS as traffic will be unencrypted and publicly visible otherwise. This traffic will include confidential information such as usernames, project names, project/group access tokens and more!

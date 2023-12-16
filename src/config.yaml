@@ -12,3 +12,5 @@ approval:
   strict_match: true
   only_for_members: null
   message: Merge request has been approved.
+uvicorn:
+  reload: false

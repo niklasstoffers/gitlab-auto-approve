@@ -6,7 +6,7 @@ def connect() -> Gitlab:
     try:
         gl.auth()
     except:
-        raise Exception("Failed to connect to gitlab server")
+        raise Exception("Failed to connect to gitlab server. Please check your gitlab configuration.")
     return gl
 
 gl: Gitlab = connect()

@@ -3,8 +3,12 @@ services:
   gitlab-auto-approve:
     container_name: gitlab-auto-approve
     image: gitlab-auto-approve
-    build: .
+    build: 
+      context: .
+      dockerfile: dev.Dockerfile
     restart: always
+    volumes:
+      - ./src:/app/
     ports:
       - '${APP_PORT}:80'
     environment:
@@ -19,3 +23,4 @@ services:
       - APPROVAL_STRICT_MATCH=${APPROVAL_STRICT_MATCH}
       - APPROVAL_ONLY_FOR_MEMBERS=${APPROVAL_ONLY_FOR_MEMBERS}
       - APPROVAL_MESSAGE=${APPROVAL_MESSAGE}
+      - UVICORN_RELOAD=${UVICORN_RELOAD}
