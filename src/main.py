@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, Header, HTTPException, status
+from fastapi import FastAPI, Depends, Header, HTTPException, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
@@ -24,6 +24,9 @@ def check_comment(event: CommentEvent):
 
 def check_author(event: CommentEvent):
     return config.approval.only_for_members == None or event.user.username in config.approval.only_for_members
+
+def check_event(event: CommentEvent):
+    return event.merge_request is not None and check_comment(event) and check_author(event)
 
 def approve(event: CommentEvent):
     project: Project = gl.projects.get(event.project.id)
@@ -53,11 +56,13 @@ app.add_middleware(
 
 @app.post("/approve-merge", dependencies = [Depends(verify_token)])
 async def approve_merge(event: CommentEvent):
-    if check_author(event) and check_comment(event):
+    if check_event(event):
         try:
             approve(event)
         except:
             raise Exception("Failed to approve merge request")
+    
+    return Response(status_code=status.HTTP_200_OK)
         
 if __name__ == "__main__":
     if config.ssl.enable:
