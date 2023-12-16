@@ -14,6 +14,9 @@ class SSL(BaseModel):
     key_file: str
     cert_file: str
 
+class Uvicorn(BaseModel):
+    reload: bool
+
 class Config(BaseModel):
     gitlab_host: str
     access_token: str
@@ -21,6 +24,7 @@ class Config(BaseModel):
     trusted_hosts_only: bool
     ssl: SSL
     approval: Approval
+    uvicorn: Uvicorn
 
 def get_bool_env(env_name: str, default_value: bool) -> bool:
     return environ.get(env_name, str(default_value)).lower() == 'true'
@@ -44,6 +48,7 @@ def load_env(config: Config):
     config.approval.strict_match = environ.get('APPROVAL_STRICT_MATCH', config.approval.strict_match)
     config.approval.only_for_members = get_list_env('APPROVAL_ONLY_FOR_MEMBERS', config.approval.only_for_members)
     config.approval.message = environ.get('APPROVAL_MESSAGE', config.approval.message)
+    config.uvicorn.reload = get_bool_env('UVICORN_RELOAD', config.uvicorn.reload)
     
     if config.approval.message is not None and len(config.approval.message.strip()) == 0:
         config.approval.message = None

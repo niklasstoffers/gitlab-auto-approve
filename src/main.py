@@ -61,6 +61,6 @@ async def approve_merge(event: CommentEvent):
         
 if __name__ == "__main__":
     if config.ssl.enable:
-        uvicorn.run("main:app", host="0.0.0.0", port=80, ssl_keyfile=config.ssl.key_file, ssl_certfile=config.ssl.cert_file)
+        uvicorn.run("main:app", host="0.0.0.0", port=80, ssl_keyfile=config.ssl.key_file, ssl_certfile=config.ssl.cert_file, reload=config.uvicorn.reload)
     else:
-        uvicorn.run("main:app", host="0.0.0.0", port=80)
+        uvicorn.run("main:app", host="0.0.0.0", port=80, reload=config.uvicorn.reload)
