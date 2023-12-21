@@ -15,7 +15,7 @@
     <br>
     <img src="https://img.shields.io/github/languages/top/niklasstoffers/gitlab-auto-approve?color=blueviolet" alt="top language">
     <img src="https://sloc.xyz/github/niklasstoffers/gitlab-auto-approve" alt="total lines">
-    <a href="https://www.codefactor.io/repository/github/niklasstoffers/hainzdiscord"><img src="https://www.codefactor.io/repository/github/niklasstoffers/hainzdiscord/badge" alt="code quality" /></a>
+    <a href="https://www.codefactor.io/repository/github/niklasstoffers/gitlab-auto-approve"><img src="https://www.codefactor.io/repository/github/niklasstoffers/gitlab-auto-approve/badge" alt="code quality" /></a>
 </p>
 
 **Gitlab Auto Approve** is a [Gitlab](https://about.gitlab.com/) bot for automatically approving merge requests. It's built based on [FastAPI](https://fastapi.tiangolo.com/).
