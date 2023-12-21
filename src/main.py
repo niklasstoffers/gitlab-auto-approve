@@ -7,6 +7,7 @@ def parse_args() -> Namespace:
     parser.add_argument('-c', '--config', default="config.yaml")
     parser.add_argument('--disable-startup-logs', action='store_true', default=False)
     parser.add_argument('--disable-startup-file-logs', action='store_true', default=False)
+    parser.add_argument('--startup-log-file', default="startup.log")
     return parser.parse_args()
 
 def main():
@@ -15,8 +16,9 @@ def main():
         .with_config(args.config)                               \
         .with_startup_logger(
             StartupLoggerConfig(
-                args.disable_startup_logs,
-                args.disable_startup_file_logs
+                not args.disable_startup_logs,
+                not args.disable_startup_file_logs,
+                args.startup_log_file
             )
         )                                                       \
         .run()

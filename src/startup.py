@@ -1,17 +1,19 @@
-from logging import Logger, getLogger, NullHandler, getHandlerByName, DEBUG
+from logging import Logger, DEBUG
 from config.config import Config
 from config.config_manager import get_config, init as init_config_manager
-from bootstrapping.bootstrapper import configure_logging
 from helpers.dump.json_dump import dump
+from helpers.logging.factory import create_logger
 import uvicorn
 
 class StartupLoggerConfig():
-    disable: bool
-    disable_file_logs: bool
+    enable: bool
+    enable_file_logs: bool
+    file: str
 
-    def __init__(self, disable: bool, disable_file_logs: bool):
-        self.disable = disable
-        self.disable_file_logs = disable_file_logs
+    def __init__(self, disable: bool, disable_file_logs: bool, file: str):
+        self.enable = disable
+        self.enable_file_logs = disable_file_logs
+        self.file = file
 
 class Startup():
     config_file: str
@@ -25,8 +27,7 @@ class Startup():
         self.config_file = config_file
         return self
     
-    def __run_app(self, config: Config):
-        logger: Logger = getLogger(__name__)
+    def __run_app(self, config: Config, logger: Logger):
         cert_file: str | None = None
         key_file: str | None = None
 
@@ -47,27 +48,23 @@ class Startup():
         )
 
     def __get_startup_logger(self) -> Logger:
-        startup_logger: Logger = getLogger('$startup')
-        if self.startup_logger_config.disable_file_logs:
-            print("disabling file")
-            startup_file_handler = getHandlerByName('startup_file')
-            startup_logger.removeHandler(startup_file_handler)
-        if self.startup_logger_config.disable:
-            print("disabling")
-            for handler in startup_logger.handlers:
-                startup_logger.removeHandler(handler)
-            startup_logger.addHandler(NullHandler())
+        config = self.startup_logger_config
+        startup_logger: Logger = Logger('$startup')
+        startup_logger = create_logger(startup_logger, 
+                                       DEBUG, 
+                                       config.enable, 
+                                       config.enable and config.enable_file_logs, 
+                                       config.file)
         return startup_logger
+        
 
     def run(self):
-        startup_logger = self.__get_startup_logger()
-        init_config_manager(self.config_file, startup_logger)
+        logger = self.__get_startup_logger()
+        logger.info("Performing startup")
+        init_config_manager(self.config_file, logger)
         config = get_config()
-        
-        configure_logging(config, startup_logger)
-        logger: Logger = getLogger(__name__)
 
         if logger.isEnabledFor(DEBUG):
             logger.debug("Running with configuration:\n%s", dump(config))
 
-        self.__run_app(config)
+        self.__run_app(config, logger)
