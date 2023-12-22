@@ -3,7 +3,6 @@ from routes.comment import router as comment_router
 from config.config_manager import get_config
 from logging import Logger, getLogger
 
-
 app = AppBuilder()              \
     .with_config(get_config())  \
     .build()

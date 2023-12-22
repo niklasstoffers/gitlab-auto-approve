@@ -10,7 +10,7 @@ services:
     volumes:
       - ./src:/app/
     ports:
-      - '${APP_PORT}:80'
+      - '${APP_PORT}:8000'
     environment:
       - GITLAB__ACCESS_TOKEN=${GITLAB__ACCESS_TOKEN}
       - GITLAB__WEBHOOK_TOKEN=${GITLAB__WEBHOOK_TOKEN}

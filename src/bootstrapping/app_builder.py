@@ -5,6 +5,9 @@ from security.trusted_hosts import enable_trusted_hosts_only
 from logging import Logger, getLogger
 from helpers.logging.factory import create_logger
 from config.config import Config
+from config.environment import Environment
+from middleware.exception_logger_middleware import ExceptionLoggerMiddleware
+from app_info import VERSION, NAME, SUMMARY
 
 class AppBuilder():
     config: Config
@@ -26,6 +29,8 @@ class AppBuilder():
                                     handlers.file.logfile if handlers.file is not None else "")
     
     def __configure_app(self, app: FastAPI):
+        app.add_middleware(ExceptionLoggerMiddleware)
+
         if self.config.trusted_hosts_only:
             host = self.config.gitlab.host.host
             self.logger.info('Enabling trusted host middleware with allowed host "%s"', host)
@@ -43,7 +48,10 @@ class AppBuilder():
         self.logger = getLogger(__name__)
 
         self.logger.info("Building app")
-        app = FastAPI()
+        app = FastAPI(docs_url=('/docs', None)[self.config.environment == Environment.PRODUCTION],
+                      version=VERSION,
+                      title=NAME,
+                      summary=SUMMARY)
 
         self.logger.info("Configuring app")
         self.__configure_app(app)

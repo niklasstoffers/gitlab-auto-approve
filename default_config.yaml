@@ -1,6 +1,7 @@
 gitlab:
   host: https://gitlab.com/
 trusted_hosts_only: false
+environment: PRODUCTION
 ssl:
   enable: false
 commands:

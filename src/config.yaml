@@ -3,6 +3,7 @@ gitlab:
   access_token: abc
   webhook_token: abc
 trusted_hosts_only: false
+environment: DEVELOPMENT
 ssl:
   enable: false
   key_file: 
