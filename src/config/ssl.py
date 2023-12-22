@@ -2,8 +2,8 @@ from pydantic import BaseModel, model_validator, FilePath, ValidationError
 
 class SSL(BaseModel):
     enable: bool
-    key_file: FilePath | None
-    cert_file: FilePath | None
+    key_file: FilePath | None = None
+    cert_file: FilePath | None = None
 
     @model_validator(mode='after')
     def _validate_certs(self) -> 'SSL':

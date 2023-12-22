@@ -2,7 +2,7 @@ from pydantic import FilePath, model_validator, ValidationError
 from config.logging.handler import Handler
 
 class FileHandler(Handler):
-    logfile: FilePath | None
+    logfile: FilePath | None = None
 
     @model_validator(mode='after')
     def _validate(self) -> 'FileHandler':

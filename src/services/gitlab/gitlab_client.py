@@ -3,7 +3,8 @@ from gitlab.v4.objects import Project, ProjectMergeRequest, ProjectMergeRequestA
 from fastapi import Depends
 from logging import Logger
 from helpers.logging.dependencies import resolve_logger
-from config.config import config
+from config.config_manager import get_config
+from config.config import Config
 
 class GitlabClient():
     client: Gitlab
@@ -59,7 +60,7 @@ class GitlabClient():
 
 client: GitlabClient = None
 
-def get_client(logger: Logger = Depends(resolve_logger(__name__))) -> GitlabClient:
+def get_client(logger: Logger = Depends(resolve_logger(__name__)), config: Config = Depends(get_config)) -> GitlabClient:
     if client is None:
         logger.info('Creating gitlab client')
         gl = Gitlab(config.gitlab_host, private_token=config.access_token)

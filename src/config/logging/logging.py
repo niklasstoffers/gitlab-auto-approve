@@ -5,9 +5,9 @@ from helpers.logging.level import get_level_from_name
 
 class Logging(BaseModel):
     enable: bool
-    level: str | None
-    handlers: Handlers | None
-    _level: int | None
+    level: str | None = None
+    handlers: Handlers | None = None
+    _level: int | None = None
             
 
     @model_validator(mode='after')
