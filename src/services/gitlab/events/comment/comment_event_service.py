@@ -21,8 +21,8 @@ class CommentEventService():
             message = message.lower()
         
         if command.strict_match:
-            return keyword in message
-        return keyword == message
+            return keyword == message
+        return keyword in message
 
     def __handle_merge_comment(self, event: CommentEvent):
         if event.merge_request is None:

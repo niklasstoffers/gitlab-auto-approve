@@ -22,7 +22,7 @@ class GitlabClient():
     def is_merge_request_approved_by(self, merge_request: ProjectMergeRequest, username: str) -> bool:
         approvals: ProjectMergeRequestApproval = merge_request.approvals.get()
         for approval in approvals.attributes["approved_by"]:
-            if approval.user is not None and approval.user.username == username:
+            if approval['user']['username'] == username:
                 return True
         return False
 
