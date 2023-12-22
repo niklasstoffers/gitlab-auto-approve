@@ -97,7 +97,6 @@ You can use the following configuration options to configure the bot to your spe
 
 | Option      | Environment variable | Description |
 | ----------- | ----------- | ----------- |
-| - | `APP_PORT` | Specifies which host port docker will map the container port to when using docker compose. |
 | `gitlab` | - | Section for Gitlab specific configuration |
 | `gitlab.host` | `GITLAB__HOST` | Configures the server url of the gitlab server |
 | `gitlab.access_token` | `GITLAB__ACCESS_TOKEN` | Access token that needs to be setup for your gitlab repository. This is used in order to make calls to the Gitlab API |

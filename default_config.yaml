@@ -12,9 +12,11 @@ commands:
     message: Merge request has been approved.
 uvicorn:
   reload: false
+  host: "0.0.0.0"
+  port: 8000
 logging:
   enable: true
-  level: DEBUG
+  level: INFO
   handlers:
     console:
       enable: true

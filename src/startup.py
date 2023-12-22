@@ -3,17 +3,25 @@ from config.config import Config
 from config.config_manager import get_config, init as init_config_manager
 from helpers.dump.json_dump import dump
 from helpers.logging.factory import create_logger
+from helpers.logging.level import get_level_from_name
 import uvicorn
 
 class StartupLoggerConfig():
     enable: bool
     enable_file_logs: bool
     file: str
+    log_level: str
+    _log_level: int
 
-    def __init__(self, disable: bool, disable_file_logs: bool, file: str):
+    def __init__(self, disable: bool, disable_file_logs: bool, file: str, log_level: str):
         self.enable = disable
         self.enable_file_logs = disable_file_logs
         self.file = file
+        self.log_level = log_level
+        log_level = get_level_from_name(self.log_level)
+        if (log_level is None):
+            raise Exception("Invalid log level")
+        self._log_level = log_level
 
 class Startup():
     config_file: str
@@ -51,7 +59,7 @@ class Startup():
         config = self.startup_logger_config
         startup_logger: Logger = Logger('$startup')
         startup_logger = create_logger(startup_logger, 
-                                       DEBUG, 
+                                       config._log_level, 
                                        config.enable, 
                                        config.enable and config.enable_file_logs, 
                                        config.file)

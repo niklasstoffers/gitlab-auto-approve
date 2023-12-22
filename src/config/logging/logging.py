@@ -1,6 +1,7 @@
 from pydantic import BaseModel, model_validator, ValidationError
 from config.logging.handlers import Handlers
 from logging import getLevelNamesMapping
+from helpers.logging.level import get_level_from_name
 
 class Logging(BaseModel):
     enable: bool
@@ -15,10 +16,10 @@ class Logging(BaseModel):
             if self.level is None:
                 raise ValidationError("Log level must be specified when enabling logging")
             else:
-                mappings = getLevelNamesMapping()
-                if not self.level in mappings:
+                level = get_level_from_name(self.level)
+                if level is None:
                     raise ValidationError("Invalid log level")
-                self._level = mappings[self.level]
+                self._level = level
         
         return self
 

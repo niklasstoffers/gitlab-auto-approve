@@ -2,6 +2,7 @@ from config.config import Config
 import yaml
 from pydantic import ValidationError
 from logging import Logger
+from config.environment_loader import load_environment
 
 
 _config: Config | None = None
@@ -11,6 +12,7 @@ def _load_config(filename: str, logger: Logger) -> Config:
         logger.info('Loading configuration from file "%s"', filename)
         with open(filename) as config_file:
             yaml_config = yaml.safe_load(config_file.read())
+            load_environment(yaml_config)
             config: Config = Config(**yaml_config)
             return config
     except ValidationError as e:
