@@ -11,6 +11,12 @@ commands:
     strict_match: true
     only_for_members: null
     message: Merge request has been approved.
+  disapproval:
+    keyword: lbtm
+    ignore_case: true
+    strict_match: true
+    only_for_members: null
+    message: Merge request has been disapproved.
 uvicorn:
   reload: false
   host: "0.0.0.0"

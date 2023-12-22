@@ -30,6 +30,8 @@ class CommentEventService():
         config: Config = get_config()
         if self.__is_command_invocation(event, config.commands.approval):
             self.gitlab_client.approve_merge_request(event.project.id, event.merge_request.iid, config.commands.approval.message)
+        elif self.__is_command_invocation(event, config.commands.disapproval):
+            self.gitlab_client.disapprove_merge_request(event.project.id, event.merge_request.iid, config.commands.disapproval.message)
 
 
     def handle_comment_event(self, event: CommentEvent):
