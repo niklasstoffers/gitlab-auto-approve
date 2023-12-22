@@ -61,9 +61,10 @@ class GitlabClient():
 client: GitlabClient = None
 
 def get_client(logger: Logger = Depends(resolve_logger(__name__)), config: Config = Depends(get_config)) -> GitlabClient:
+    global client
     if client is None:
         logger.info('Creating gitlab client')
-        gl = Gitlab(config.gitlab_host, private_token=config.access_token)
+        gl = Gitlab(str(config.gitlab.host), private_token=config.gitlab.access_token)
         client = GitlabClient(gl)
         try:
             logger.info('Connecting to gitlab')

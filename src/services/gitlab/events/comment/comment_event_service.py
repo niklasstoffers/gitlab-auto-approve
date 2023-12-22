@@ -29,7 +29,7 @@ class CommentEventService():
             raise Exception("Invalid event object")
         config: Config = get_config()
         if self.__is_command_invocation(event, config.commands.approval):
-            self.__approve_merge_request(event.project.id, event.merge_request.iid, config.commands.approval.message)
+            self.gitlab_client.approve_merge_request(event.project.id, event.merge_request.iid, config.commands.approval.message)
 
 
     def handle_comment_event(self, event: CommentEvent):
@@ -39,6 +39,7 @@ class CommentEventService():
 service: CommentEventService | None = None
 
 def get_service(gitlab_client: GitlabClient = Depends(get_client)) -> CommentEventService:
+    global service
     if service is None:
         service = CommentEventService(gitlab_client)
     return service
