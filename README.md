@@ -116,18 +116,16 @@ You can use the following configuration options to configure the bot to your spe
 | `ssl.key_file` | `SSL__KEY_FILE` | Path to your SSL private key file |
 | `ssl.cert_file` | `SSL__CERT_FILE` | Path to your SSL certificate file |
 | `commands` | - | Section for command specific configuration |
-| `commands.approval` | - | Section for configuration options regarding the approval of merge requests |
-| `commands.approval.keyword` | `COMMANDS__APPROVAL__KEYWORD` | Keyword that the bot will scan merge request comments for |
-| `commands.approval.ignore_case` | `COMMANDS__APPROVAL__IGNORE_CASE` | If set to `true` the bot won't treat keywords case-sensitive |
-| `commands.approval.strict_match` | `COMMANDS__APPROVAL__STRICT_MATCH` | If set to `true` the bot will only approve when the comment **only** contains the keyword. If set to `false` the keyword only needs to be present in the merge request comment |
-| `commands.approval.only_for_members` | `COMMANDS__APPROVAL__ONLY_FOR_MEMBERS` | Comma-separated list of Gitlab usernames. If specified the bot will only approve when the comment author is in the username list. |
-| `commands.approval.message` | `COMMANDS__APPROVAL__MESSAGE` | Comment message that the bot will create after approving the merge request. If left empty the bot won't send a message at all. |
-| `commands.disapproval` | - | Section for configuration options regarding the disapproval of merge requests |
-| `commands.disapproval.keyword` | `COMMANDS__DISAPPROVAL__KEYWORD` | Keyword that the bot will scan merge request comments for |
-| `commands.disapproval.ignore_case` | `COMMANDS__DISAPPROVAL__IGNORE_CASE` | If set to `true` the bot won't treat keywords case-sensitive |
-| `commands.disapproval.strict_match` | `COMMANDS__DISAPPROVAL__STRICT_MATCH` | If set to `true` the bot will only disapprove when the comment **only** contains the keyword. If set to `false` the keyword only needs to be present in the merge request comment |
-| `commands.disapproval.only_for_members` | `COMMANDS__DISAPPROVAL__ONLY_FOR_MEMBERS` | Comma-separated list of Gitlab usernames. If specified the bot will only disapprove when the comment author is in the username list. |
-| `commands.disapproval.message` | `COMMANDS__DISAPPROVAL__MESSAGE` | Comment message that the bot will create after disapproving the merge request. If left empty the bot won't send a message at all. |
+| `commands.<type>` | - | Section for command type specific configuration. This configuration options are available to all commands. |
+| `commands.<type>.keyword` | `COMMANDS__<TYPE>__KEYWORD` | Keyword that the bot will scan the user comment for. |
+| `commands.<type>.ignore_case` | `COMMANDS__<TYPE>__IGNORE_CASE` | If set to `true` the bot won't treate keywords case-sensitive. |
+| `commands.<type>.strict_match` | `COMMANDS__<TYPE>__STRICT_MATCH` | If set to `true` the bot will only invoke the command when the user comment **only** contains the keyword. If set to `false` the keyword only needs to be present within the entire comment. |
+| `commands.<type>.only_for_members` | `COMMANDS__<TYPE>__ONLY_FOR_MEMBERS` | Comma-separated list of Gitlab usernames. If specified the bot will only invoke the command if the comment author is in the username list. |
+| `commands.<type>.requires_role` | `COMMANDS__<TYPE>__REQUIRES_ROLE` | Required role for the command. If specified the bot will only invoke the command if the comment author has the specified role. Can be set to `NO_ACCESS`, `MINIMAL_ACCESS`, `GUEST`, `REPORTER`, `DEVELOPER`, `MAINTAINER` or `OWNER`. |
+| `commands.<type>.message` | `COMMANDS__<TYPE>__MESSAGE` | Comment response that the bot will create after invoking the command. If left empty the bot won't send a message at all. |
+| `commands.approval` | - | Section for configuration options regarding the approval of merge requests. |
+| `commands.disapproval` | - | Section for configuration options regarding the disapproval of merge requests. |
+| `commands.merge` | - | Section for configuration options regarding merge of merge requests. |
 | `uvicorn.reload` | `UVICORN__RELOAD` | If set to `true` uvicorn will reload the server upon file change. This should be set to `false` in production environments but is a useful setting for development. |
 | `logging` | - | Section for configuration options regarding logging |
 | `logging.enable` | `LOGGING__ENABLE` | Enables logging within the application. Note that the bot also comes with startup logging which already logs before configuration is loaded. If you want to disable startup logging invoke the application with the `--disable-startup-logs` command line option. |

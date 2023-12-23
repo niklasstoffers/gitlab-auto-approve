@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from config.gitlab import Gitlab
+from config.gitlab.gitlab import Gitlab
 from config.environment import Environment
 from config.ssl import SSL
 from config.commands.commands import Commands
