@@ -33,7 +33,7 @@ class CommentEventService():
         elif self.__is_command_invocation(event, self.config.commands.disapproval):
             self.gitlab_client.disapprove_merge_request(event.project.id, event.merge_request.iid, self.config.commands.disapproval.message)
         elif self.__is_command_invocation(event, self.config.commands.merge):
-            self.gitlab_client.merge(event.project.project_id, event.merge_request.iid, message=self.config.commands.merge.message)
+            self.gitlab_client.merge(event.project.id, event.merge_request.iid, message=self.config.commands.merge.message)
 
 
     def handle_comment_event(self, event: CommentEvent):
