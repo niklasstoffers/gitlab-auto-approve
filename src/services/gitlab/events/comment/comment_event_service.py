@@ -5,13 +5,14 @@ from services.gitlab.gitlab_client import get_client, GitlabClient
 from config.config_manager import get_config
 from config.config import Config
 from config.commands.command import Command
-from typing import Callable
 
 class CommentEventService():
     gitlab_client: GitlabClient
+    config: Config
 
-    def __init__(self, gitlab_client: GitlabClient):
+    def __init__(self, gitlab_client: GitlabClient, config: Config):
         self.gitlab_client = gitlab_client
+        self.config = config
 
     def __is_command_invocation(self, event: CommentEvent, command: Command):
         keyword = command.keyword
@@ -27,11 +28,12 @@ class CommentEventService():
     def __handle_merge_comment(self, event: CommentEvent):
         if event.merge_request is None:
             raise Exception("Invalid event object")
-        config: Config = get_config()
-        if self.__is_command_invocation(event, config.commands.approval):
-            self.gitlab_client.approve_merge_request(event.project.id, event.merge_request.iid, config.commands.approval.message)
-        elif self.__is_command_invocation(event, config.commands.disapproval):
-            self.gitlab_client.disapprove_merge_request(event.project.id, event.merge_request.iid, config.commands.disapproval.message)
+        if self.__is_command_invocation(event, self.config.commands.approval):
+            self.gitlab_client.approve_merge_request(event.project.id, event.merge_request.iid, self.config.commands.approval.message)
+        elif self.__is_command_invocation(event, self.config.commands.disapproval):
+            self.gitlab_client.disapprove_merge_request(event.project.id, event.merge_request.iid, self.config.commands.disapproval.message)
+        elif self.__is_command_invocation(event, self.config.commands.merge):
+            self.gitlab_client.merge(event.project.project_id, event.merge_request.iid, message=self.config.commands.merge.message)
 
 
     def handle_comment_event(self, event: CommentEvent):
@@ -40,8 +42,8 @@ class CommentEventService():
 
 service: CommentEventService | None = None
 
-def get_service(gitlab_client: GitlabClient = Depends(get_client)) -> CommentEventService:
+def get_service(gitlab_client: GitlabClient = Depends(get_client), config: Config = Depends(get_config)) -> CommentEventService:
     global service
     if service is None:
-        service = CommentEventService(gitlab_client)
+        service = CommentEventService(gitlab_client, config)
     return service
