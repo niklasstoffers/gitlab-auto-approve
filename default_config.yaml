@@ -1,13 +1,9 @@
 gitlab:
   host: https://gitlab.com/
-  access_token: abc
-  webhook_token: abc
 trusted_hosts_only: false
-environment: DEVELOPMENT
+environment: PRODUCTION
 ssl:
   enable: false
-  key_file:
-  cert_file:
 commands:
   approval:
     keyword: lgtm
@@ -27,10 +23,7 @@ uvicorn:
   port: 8000
 logging:
   enable: true
-  level: DEBUG
+  level: INFO
   handlers:
     console:
       enable: true
-    file:
-      enable: false
-      logfile:
