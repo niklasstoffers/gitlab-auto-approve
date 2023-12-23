@@ -1,14 +1,24 @@
 version: '3.8'
 services:
-  gitlab-auto-approve:
-    container_name: gitlab-auto-approve
-    image: gitlab-auto-approve
+  gitlab-auto-approve-dev:
+    container_name: gitlab-auto-approve-dev
+    image: gitlab-auto-approve-dev
     build: 
       context: .
       dockerfile: dev.Dockerfile
-    restart: always
     volumes:
       - ./src:/app/
+    ports:
+      - '${APP_PORT}:8000'
+    environment:
+      - GITLAB__ACCESS_TOKEN=${GITLAB__ACCESS_TOKEN}
+      - GITLAB__WEBHOOK_TOKEN=${GITLAB__WEBHOOK_TOKEN}
+      - ENVIRONMENT=${ENVIRONMENT}
+      - LOGGING__LEVEL=${LOGGING__LEVEL}
+  gitlab-auto-approve:
+    container_name: gitlab-auto-approve
+    image: gitlab-auto-approve
+    build: .
     ports:
       - '${APP_PORT}:8000'
     environment:
