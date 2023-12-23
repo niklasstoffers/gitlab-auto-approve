@@ -10,12 +10,14 @@ commands:
     ignore_case: true
     strict_match: true
     only_for_members: null
+    requires_role: null
     message: Merge request has been approved.
   disapproval:
     keyword: lbtm
     ignore_case: true
     strict_match: true
     only_for_members: null
+    requires_role: null
     message: Merge request has been disapproved.
   merge:
     keyword: '@LGTM please merge'
