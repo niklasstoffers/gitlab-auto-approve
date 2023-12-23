@@ -15,14 +15,22 @@
     <br>
     <img src="https://img.shields.io/github/languages/top/niklasstoffers/gitlab-auto-approve?color=blueviolet" alt="top language">
     <img src="https://sloc.xyz/github/niklasstoffers/gitlab-auto-approve" alt="total lines">
-    <a href="https://www.codefactor.io/repository/github/niklasstoffers/hainzdiscord"><img src="https://www.codefactor.io/repository/github/niklasstoffers/hainzdiscord/badge" alt="code quality" /></a>
+    <a href="https://www.codefactor.io/repository/github/niklasstoffers/gitlab-auto-approve"><img src="https://www.codefactor.io/repository/github/niklasstoffers/gitlab-auto-approve/badge" alt="code quality" /></a>
 </p>
 
 **Gitlab Auto Approve** is a [Gitlab](https://about.gitlab.com/) bot for automatically approving merge requests. It's built based on [FastAPI](https://fastapi.tiangolo.com/).
 
+## IMPORTANT
+
+**This bot is still in development. Version v0.1.0 will be out soon**
+
 ## Features
 
-This bot currently only supports automatic approval of merge requests upon receiving configureable user comments within the gitlab merge request. If you are missing further features please [open a new issue](https://github.com/niklasstoffers/gitlab-auto-approve/issues/new).
+This bot currently only supports automatic approval and disapproval of merge requests upon receiving configureable user comments within the gitlab merge request. If you are missing further features please [open a new issue](https://github.com/niklasstoffers/gitlab-auto-approve/issues/new).
+
+## Compatibility
+
+Due to limitations in the Gitlab API approval commands can only be used with a Premium or Ultimate Tier instance. This bot was primarily tested for Gitlab version `v16.7.0`. If you encounter issues with a different Gitlab version please [open a new issue](https://github.com/niklasstoffers/gitlab-auto-approve/).
 
 ## Setup
 
@@ -97,21 +105,39 @@ You can use the following configuration options to configure the bot to your spe
 
 | Option      | Environment variable | Description |
 | ----------- | ----------- | ----------- |
-| `gitlab_host` | `GITLAB_HOST` | Configures the server url of the gitlab server |
-| `access_token` | `GITLAB_ACCESS_TOKEN` | Access token that needs to be setup for your gitlab repository. This is used in order to make calls to the Gitlab API |
-| `webhook_token` | `GITLAB_WEBHOOK_TOKEN` | Webhook token that was specified when creating the `comment` trigger webhook |
+| `gitlab` | - | Section for Gitlab specific configuration |
+| `gitlab.host` | `GITLAB__HOST` | Configures the server url of the gitlab server |
+| `gitlab.access_token` | `GITLAB__ACCESS_TOKEN` | Access token that needs to be setup for your gitlab repository. This is used in order to make calls to the Gitlab API |
+| `gitlab.webhook_token` | `GITLAB__WEBHOOK_TOKEN` | Webhook token that was specified when creating the `comment` trigger webhook |
 | `trusted_hosts_only` | `TRUSTED_HOSTS_ONLY` | If enabled will block HTTP requests that do not contain your `gitlab_host` in the HTTP Host header |
+| `environment` | `ENVIRONMENT` | Sets the environment the bot will run under. Supports either `DEVELOPMENT` or `PRODUCTION`. Under the `DEVELOPMENT` environment certain features like the Open-API documentation will be available. |
 | `ssl` | - | Section for SSL specific configuration options |
-| `ssl.enable` | `USE_SSL` | Enables HTTPS. You will need additional configuration for your SSL certificates. See [HTTPS](#https) |
-| `ssl.key_file` | `SSL_KEY_FILE` | Path to your SSL private key file |
-| `ssl.cert_file` | `SSL_CERT_FILE` | Path to your SSL certificate file |
-| `approval` | - | Section for configuration options regarding the approval of merge requests |
-| `approval.keyword` | `APPROVAL_KEYWORD` | Keyword that the bot will scan merge request comments for |
-| `approval.ignore_case` | `APPROVAL_IGNORE_CASE` | If set to `true` the bot won't treat keywords case-sensitive |
-| `approval.strict_match` | `APPROVAL_STRICT_MATCH` | If set to `true` the bot will only approve when the comment **only** contains the keyword. If set to `false` the keyword only needs to be present in the merge request comment |
-| `approval.only_for_members` | `APPROVAL_ONLY_FOR_MEMBERS` | Comma-separated list of Gitlab usernames. If specified the bot will only approve when the comment author is in the username list. |
-| `approval.message` | `APPROVAL_MESSAGE` | Comment message that the bot will create after approving the merge request. If left empty the bot won't send a message at all. |
-| `uvicorn.reload` | `UVICORN_RELOAD` | If set to `true` uvicorn will reload the server upon file change. This should be set to `false` in production environments but is a useful setting for development. |
+| `ssl.enable` | `SSL__ENABLE` | Enables HTTPS. You will need additional configuration for your SSL certificates. See [HTTPS](#https) |
+| `ssl.key_file` | `SSL__KEY_FILE` | Path to your SSL private key file |
+| `ssl.cert_file` | `SSL__CERT_FILE` | Path to your SSL certificate file |
+| `commands` | - | Section for command specific configuration |
+| `commands.approval` | - | Section for configuration options regarding the approval of merge requests |
+| `commands.approval.keyword` | `COMMANDS__APPROVAL__KEYWORD` | Keyword that the bot will scan merge request comments for |
+| `commands.approval.ignore_case` | `COMMANDS__APPROVAL__IGNORE_CASE` | If set to `true` the bot won't treat keywords case-sensitive |
+| `commands.approval.strict_match` | `COMMANDS__APPROVAL__STRICT_MATCH` | If set to `true` the bot will only approve when the comment **only** contains the keyword. If set to `false` the keyword only needs to be present in the merge request comment |
+| `commands.approval.only_for_members` | `COMMANDS__APPROVAL__ONLY_FOR_MEMBERS` | Comma-separated list of Gitlab usernames. If specified the bot will only approve when the comment author is in the username list. |
+| `commands.approval.message` | `COMMANDS__APPROVAL__MESSAGE` | Comment message that the bot will create after approving the merge request. If left empty the bot won't send a message at all. |
+| `commands.disapproval` | - | Section for configuration options regarding the disapproval of merge requests |
+| `commands.disapproval.keyword` | `COMMANDS__DISAPPROVAL__KEYWORD` | Keyword that the bot will scan merge request comments for |
+| `commands.disapproval.ignore_case` | `COMMANDS__DISAPPROVAL__IGNORE_CASE` | If set to `true` the bot won't treat keywords case-sensitive |
+| `commands.disapproval.strict_match` | `COMMANDS__DISAPPROVAL__STRICT_MATCH` | If set to `true` the bot will only disapprove when the comment **only** contains the keyword. If set to `false` the keyword only needs to be present in the merge request comment |
+| `commands.disapproval.only_for_members` | `COMMANDS__DISAPPROVAL__ONLY_FOR_MEMBERS` | Comma-separated list of Gitlab usernames. If specified the bot will only disapprove when the comment author is in the username list. |
+| `commands.disapproval.message` | `COMMANDS__DISAPPROVAL__MESSAGE` | Comment message that the bot will create after disapproving the merge request. If left empty the bot won't send a message at all. |
+| `uvicorn.reload` | `UVICORN__RELOAD` | If set to `true` uvicorn will reload the server upon file change. This should be set to `false` in production environments but is a useful setting for development. |
+| `logging` | - | Section for configuration options regarding logging |
+| `logging.enable` | `LOGGING__ENABLE` | Enables logging within the application. Note that the bot also comes with startup logging which already logs before configuration is loaded. If you want to disable startup logging invoke the application with the `--disable-startup-logs` command line option. |
+| `logging.level` | `LOGGING__LEVEL` | Sets the log level to be used. Can be set to `DEBUG`, `INFO`, `WARNING`, `ERROR` or `CRITICAL`. |
+| `logging.handlers` | - | Section for configuration options regarding logging handlers. |
+| `logging.handlers.console` | - | Section for configuration options regarding console logging handler. |
+| `logging.handlers.console.enable` | `LOGGING__HANDLERS__CONSOLE__ENABLE` | If set to `true` the application will log to the console. |
+| `logging.handlers.file` | - | Section for configuration options regarding file logging handler. |
+| `logging.handlers.file.enable` | `LOGGING__HANDLERS__FILE__ENABLE` | If set to `true` the application will log to a file. |
+| `logging.handlers.file.logfile` | `LOGGING__HANDLERS__FILE__LOGFILE` | Path to the logfile. Must be set if file logging is enabled. |
 
 ### HTTPS
 

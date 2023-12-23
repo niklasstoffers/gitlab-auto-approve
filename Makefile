@@ -9,13 +9,22 @@ help:
 	| column -t -s '##'
 
 build: ## Build application
-	@docker-compose --env-file $(ENV_FILE) build
+	@docker-compose --env-file $(ENV_FILE) build gitlab-auto-approve
 
 rebuild: ## Build application without cache
-	@docker-compose --env-file $(ENV_FILE) build --no-cache
+	@docker-compose --env-file $(ENV_FILE) build --no-cache gitlab-auto-approve
 
 run: ## Run application
-	@docker-compose --env-file $(ENV_FILE) up
+	@docker-compose --env-file $(ENV_FILE) up gitlab-auto-approve
+
+build-dev: ## Build dev application
+	@docker-compose --env-file $(ENV_FILE) build gitlab-auto-approve-dev
+
+rebuild-dev: ## Build dev application without cache
+	@docker-compose --env-file $(ENV_FILE) build --no-cache gitlab-auto-approve-dev
+
+run-dev: ## Run dev application
+	@docker-compose --env-file $(ENV_FILE) up gitlab-auto-approve-dev
 
 publish: ## Publish application
 	@./publish.sh

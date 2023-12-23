@@ -1,71 +1,29 @@
-from fastapi import FastAPI, Depends, Header, HTTPException, Response, status
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from typing import Annotated
-from comment_event import CommentEvent
-from config import config
-from gitlab_client import gl
-from gitlab.v4.objects import Project, ProjectMergeRequest
-from urllib.parse import urlparse
-import uvicorn
+from argparse import ArgumentParser, Namespace
+from startup import Startup, StartupLoggerConfig
 
-async def verify_token(x_gitlab_token: Annotated[str | None, Header(alias = 'X-Gitlab-Token')] = None):
-    if x_gitlab_token is None or x_gitlab_token != config.webhook_token:
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED)
+def parse_args() -> Namespace:
+    parser = ArgumentParser()
+    parser.add_argument('-c', '--config', default="config.yaml")
+    parser.add_argument('--startup-log-level', default="INFO", choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
+    parser.add_argument('--disable-startup-logs', action='store_true', default=False)
+    parser.add_argument('--disable-startup-file-logs', action='store_true', default=False)
+    parser.add_argument('--startup-log-file', default="startup.log")
+    return parser.parse_args()
 
-def check_comment(event: CommentEvent):
-    comment: str = event.object_attributes.note
-    if config.approval.ignore_case:
-        comment = comment.lower()
-    if config.approval.strict_match:
-        return config.approval.keyword == comment
-    return config.approval.keyword in comment
+def main():
+    args = parse_args()
+    Startup()                                                   \
+        .with_config(args.config)                               \
+        .with_startup_logger(
+            StartupLoggerConfig(
+                not args.disable_startup_logs,
+                not args.disable_startup_file_logs,
+                args.startup_log_file,
+                args.startup_log_level
+            )
+        )                                                       \
+        .run()
 
-def check_author(event: CommentEvent):
-    return config.approval.only_for_members == None or event.user.username in config.approval.only_for_members
 
-def check_event(event: CommentEvent):
-    return event.merge_request is not None and check_comment(event) and check_author(event)
-
-def approve(event: CommentEvent):
-    project: Project = gl.projects.get(event.project.id)
-    merge_request: ProjectMergeRequest = project.mergerequests.get(event.merge_request.iid)
-    if config.approval.message is not None:
-        merge_request.notes.create({'body': config.approval.message})
-    merge_request.approve()
-
-app = None
-if config.ssl.enable:
-    app = FastAPI(ssl_keyfile=config.ssl.key_file, ssl_certfile=config.ssl.cert_file)
-    app.add_middleware(HTTPSRedirectMiddleware)
-else:
-    app = FastAPI()
-
-if config.trusted_hosts_only:
-    app.add_middleware(TrustedHostMiddleware, allowed_hosts=[urlparse(config.gitlab_host).netloc])
-
-origins = [config.gitlab_host]
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"]
-)
-
-@app.post("/approve-merge", dependencies = [Depends(verify_token)])
-async def approve_merge(event: CommentEvent):
-    if check_event(event):
-        try:
-            approve(event)
-        except:
-            raise Exception("Failed to approve merge request")
-    
-    return Response(status_code=status.HTTP_200_OK)
-        
 if __name__ == "__main__":
-    if config.ssl.enable:
-        uvicorn.run("main:app", host="0.0.0.0", port=80, ssl_keyfile=config.ssl.key_file, ssl_certfile=config.ssl.cert_file, reload=config.uvicorn.reload)
-    else:
-        uvicorn.run("main:app", host="0.0.0.0", port=80, reload=config.uvicorn.reload)
+    main()
