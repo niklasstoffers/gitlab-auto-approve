@@ -39,7 +39,7 @@ class CommentEventService():
             self.logger.debug(f'Performing match comparison of message "{message}" with result {is_match}')
         
         if is_match:
-            self.logger.info(f'Invocation matches command signature for command "{command.__name__}"')
+            self.logger.info(f'Invocation matches command signature for command "{type(command).__name__}"')
         return is_match
     
     def __can_invoke_command(self, event: CommentEvent, command: Command) -> bool:
