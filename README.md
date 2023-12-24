@@ -9,9 +9,9 @@
 
 <p align="center">
     <a href="https://github.com/niklasstoffers/gitlab-auto-approve/blob/main/LICENSE"><img src="https://img.shields.io/github/license/niklasstoffers/gitlab-auto-approve?color=informational" alt="license"></a>
-    <img src="https://img.shields.io/github/actions/workflow/status/niklasstoffers/gitlab-auto-approve/build">
+    <a href="https://hub.docker.com/repository/docker/niklasstoffers/gitlab-auto-approve/general"><img src="https://img.shields.io/docker/v/niklasstoffers/gitlab-auto-approve" alt="version"></a>
+    <img src="https://img.shields.io/github/actions/workflow/status/niklasstoffers/gitlab-auto-approve/build.yml" alt="build status">
     <a href="https://github.com/niklasstoffers/gitlab-auto-approve/issues"><img src="https://img.shields.io/github/issues/niklasstoffers/gitlab-auto-approve" alt="open issues" /></a>
-    <img src="https://img.shields.io/github/last-commit/niklasstoffers/gitlab-auto-approve" alt="last commit">
     <br>
     <img src="https://img.shields.io/github/languages/top/niklasstoffers/gitlab-auto-approve?color=blueviolet" alt="top language">
     <img src="https://sloc.xyz/github/niklasstoffers/gitlab-auto-approve" alt="total lines">
