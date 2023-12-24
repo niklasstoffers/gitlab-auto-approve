@@ -1,10 +1,6 @@
 name: BUILD
 
-on:
-  push:
-    branches: [ "**" ]
-  pull_request:
-    branches: [ "**" ]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -19,13 +15,12 @@ jobs:
       with:
         context: .
         file: ./Dockerfile
-        tags: ${{ steps.meta.outputs.tags }}
-        labels: ${{ steps.meta.outputs.labels }}
+        labels: gitlab-auto-approve
         outputs: type=docker,dest=/tmp/image.tar
     - name: Save artifacts
       id: save-artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: gitlab-auto-approve--${{ GITHUB_SHA }}
+        name: gitlab-auto-approve.${{ env.GITHUB_SHA }}
         path: /tmp/image.tar
         if-no-files-found: error
