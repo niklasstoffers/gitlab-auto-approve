@@ -21,6 +21,6 @@ jobs:
       id: save-artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: gitlab-auto-approve.${{ env.GITHUB_SHA }}
+        name: ${{ github.head_ref }}.${{ github.sha }}
         path: /tmp/image.tar
         if-no-files-found: error
