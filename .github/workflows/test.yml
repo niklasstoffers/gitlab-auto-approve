@@ -25,6 +25,7 @@ jobs:
         workflow_conclusion: success
         name: ${{ github.head_ref }}.${{ github.sha }}
         path: /tmp/image.tar
+        skip_unpack: true
         if_no_artifact_found: fail
     - name: Run tests
       run: |
