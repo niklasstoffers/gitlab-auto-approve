@@ -8,6 +8,7 @@ services:
       dockerfile: dev.Dockerfile
     volumes:
       - ./autoapprove:/autoapprove
+      - ./tests:/tests
     ports:
       - '${APP_PORT}:8000'
     environment:

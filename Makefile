@@ -26,5 +26,8 @@ rebuild-dev: ## Build dev application without cache
 run-dev: ## Run dev application
 	@docker-compose --env-file $(ENV_FILE) up gitlab-auto-approve-dev
 
+test: ## Run tests
+	@docker-compose --env-file $(ENV_FILE) run --entrypoint "pytest /tests" gitlab-auto-approve-dev
+
 publish: ## Publish application
 	@./publish.sh
