@@ -68,10 +68,10 @@ If you don't want to use the [prebuilt docker image](https://hub.docker.com/r/ni
 You can also setup a new instance without using *Docker*. To do this you will need to have *Python3* installed on your machine.
 
 1. Clone the repository
-2. Configure the bot via the *src/config.yaml* file as described [here](#configuration)
+2. Configure the bot via the *autoapprove/config.yaml* file as described [here](#configuration)
 3. Run the following commands in your terminal
     ```bash
-    cd src
+    cd autoapprove
     python3 -m venv .venv
     source .venv/bin/activate
     pip install -r requirements.txt
@@ -101,7 +101,7 @@ To integrate this bot with your gitlab repository you will need Maintainer acces
 
 ## Configuration
 
-You can use the following configuration options to configure the bot to your specific needs. The bot accepts both configuration via the *src/config.yaml* file as well as environment variables. Environment variable configuration will override configuration in the *src/config.yaml* file.
+You can use the following configuration options to configure the bot to your specific needs. The bot accepts both configuration via the *autoapprove/config.yaml* file as well as environment variables. Environment variable configuration will override configuration in the *autoapprove/config.yaml* file.
 
 | Option      | Environment variable | Description |
 | ----------- | ----------- | ----------- |
