@@ -17,4 +17,4 @@ jobs:
         wait-interval: 5
     - name: Run lint
       run: |
-        ./ci_run_lint.sh
+        ./ci_lint.sh
