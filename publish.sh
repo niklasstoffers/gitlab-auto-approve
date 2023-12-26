@@ -3,9 +3,9 @@ IMAGE_NAME=gitlab-auto-approve
 IMAGE_RELEASE_TAG=latest
 IMAGE_RELEASE_NAME=$IMAGE_NAME:$IMAGE_RELEASE_TAG
 
-read -p 'Docker hub username: ' username
+read -rp 'Docker hub username: ' username
 stty -echo
-read -p 'Docker hub password: ' password; echo
+read -rp 'Docker hub password: ' password; echo
 stty echo
 
 REGISTRY_IMAGE_NAME=$username/$IMAGE_RELEASE_NAME

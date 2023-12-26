@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class MergeRequestStatus(str, Enum):
     BLOCKED = 'blocked_status'
     BROKEN_STATUS = 'broken_status'

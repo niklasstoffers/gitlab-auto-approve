@@ -11,6 +11,7 @@ from helpers.logging.dependencies import resolve_logger
 from helpers.dump.json_dump import dump as json_dump
 from services.gitlab.gitlab_role import GitlabRole
 
+
 class CommentEventService():
     gitlab_client: GitlabClient
     config: Config
@@ -29,7 +30,7 @@ class CommentEventService():
             self.logger.debug('Performing ignore case match for command invocation')
             keyword = keyword.lower()
             message = message.lower()
-        
+
         is_match: bool = False
         if command.strict_match:
             is_match = keyword == message
@@ -37,11 +38,11 @@ class CommentEventService():
         else:
             is_match = keyword in message
             self.logger.debug(f'Performing match comparison of message "{message}" with result {is_match}')
-        
+
         if is_match:
             self.logger.info(f'Invocation matches command signature for command "{type(command).__name__}"')
         return is_match
-    
+
     def __can_invoke_command(self, event: CommentEvent, command: Command) -> bool:
         can_invoke: bool = True
 
@@ -51,11 +52,11 @@ class CommentEventService():
             project: Project = self.gitlab_client.get_project(event.project.id)
             if project is None:
                 raise Exception(f"Unknown project with id {event.project.id}")
-            
+
             project_member: ProjectMember = self.gitlab_client.get_project_member(project, event.user.id)
             if project_member is None:
                 raise Exception(f"Unknown project member with id {event.user.id} for project with id {event.project.id}")
-            
+
             can_invoke = self.gitlab_client.member_has_role(project_member, command.requires_role.get_role())
             member_role: GitlabRole = self.gitlab_client.get_role_for_member(project_member)
             if can_invoke:
@@ -82,7 +83,7 @@ class CommentEventService():
         project: Project = self.gitlab_client.get_project(event.project.id)
         if project is None:
             raise Exception(f"Project with id {event.project.id} not found")
-        
+
         merge_request: ProjectMergeRequest = self.gitlab_client.get_merge_request(project, event.merge_request.iid)
         if merge_request is None:
             raise Exception(f"Merge request with iid {event.merge_request.iid} not found for project {event.project.id}")
@@ -97,7 +98,6 @@ class CommentEventService():
             self.logger.info('Merging merge request')
             self.gitlab_client.merge(event.project.id, event.merge_request.iid, message=self.config.commands.merge.message)
 
-
     def handle_comment_event(self, event: CommentEvent):
         if self.logger.isEnabledFor(DEBUG):
             self.logger.debug(f'Got comment event with data\n{json_dump(event)}')
@@ -108,7 +108,9 @@ class CommentEventService():
         else:
             self.logger.info(f'Got comment event for unhandled type "{event.type}"')
 
+
 service: CommentEventService | None = None
+
 
 def get_service(gitlab_client: GitlabClient = Depends(get_client), config: Config = Depends(get_config), logger: Logger = Depends(resolve_logger(__name__))) -> CommentEventService:
     global service

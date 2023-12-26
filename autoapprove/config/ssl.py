@@ -1,5 +1,6 @@
 from pydantic import BaseModel, model_validator, FilePath, ValidationError
 
+
 class SSL(BaseModel):
     enable: bool
     key_file: FilePath | None = None

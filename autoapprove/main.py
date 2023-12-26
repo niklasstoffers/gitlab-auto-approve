@@ -1,6 +1,7 @@
 from argparse import ArgumentParser, Namespace
 from startup import Startup, StartupLoggerConfig
 
+
 def parse_args() -> Namespace:
     parser = ArgumentParser()
     parser.add_argument('-c', '--config', default="config.yaml")
@@ -9,6 +10,7 @@ def parse_args() -> Namespace:
     parser.add_argument('--disable-startup-file-logs', action='store_true', default=False)
     parser.add_argument('--startup-log-file', default="startup.log")
     return parser.parse_args()
+
 
 def main():
     args = parse_args()
@@ -21,7 +23,7 @@ def main():
                 args.startup_log_file,
                 args.startup_log_level
             )
-        )                                                       \
+    )                                                       \
         .run()
 
 

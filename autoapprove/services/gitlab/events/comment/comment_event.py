@@ -6,6 +6,7 @@ from services.gitlab.events.comment.comment_event_type import CommentEventType
 from services.gitlab.events.comment.models.user import User
 from services.gitlab.events.comment.models.project import Project
 
+
 class CommentEvent(BaseModel):
     user: User
     project: Project

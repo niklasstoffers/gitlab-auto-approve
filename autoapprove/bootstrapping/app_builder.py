@@ -9,6 +9,7 @@ from config.environment import Environment
 from middleware.exception_logger_middleware import ExceptionLoggerMiddleware
 from app_info import VERSION, NAME, SUMMARY
 
+
 class AppBuilder():
     config: Config
     logger: Logger
@@ -16,18 +17,18 @@ class AppBuilder():
     def with_config(self, config: Config) -> 'AppBuilder':
         self.config = config
         return self
-    
+
     def __configure_logging(self):
         rootLogger: Logger = getLogger(None)
         config = self.config.logging
         if config.enable and config.handlers is not None:
             handlers = config.handlers
-            rootLogger = create_logger(rootLogger, 
-                                    config.getLogLevel(),
-                                    handlers.console is not None and handlers.console.enable,
-                                    handlers.file is not None and handlers.file.enable,
-                                    handlers.file.logfile if handlers.file is not None else "")
-    
+            rootLogger = create_logger(rootLogger,
+                                       config.getLogLevel(),
+                                       handlers.console is not None and handlers.console.enable,
+                                       handlers.file is not None and handlers.file.enable,
+                                       handlers.file.logfile if handlers.file is not None else "")
+
     def __configure_app(self, app: FastAPI):
         app.add_middleware(ExceptionLoggerMiddleware)
 
@@ -38,7 +39,7 @@ class AppBuilder():
         if self.config.ssl.enable:
             self.logger.info("Enabling HTTPS redirection")
             enable_https_redirection(app)
-        
+
         origin = str(self.config.gitlab.host)
         self.logger.info('Enabling CORS with allowed origin set to "%s"', origin)
         enable_cors(app, origins=[origin])

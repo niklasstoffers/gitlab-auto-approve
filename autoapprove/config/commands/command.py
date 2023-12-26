@@ -4,6 +4,7 @@ from typing import Annotated
 from config.validators.string_list_not_empty import string_list_not_empty
 from config.gitlab.gitlab_role import GitlabRole
 
+
 class Command(ABC, BaseModel):
     keyword: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1)]
     ignore_case: bool

@@ -6,6 +6,7 @@ from config.commands.commands import Commands
 from config.uvicorn import Uvicorn
 from config.logging.logging import Logging
 
+
 class Config(BaseModel):
     gitlab: Gitlab
     trusted_hosts_only: bool

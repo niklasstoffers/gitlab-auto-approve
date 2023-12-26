@@ -8,6 +8,7 @@ from config.config import Config
 from services.gitlab.gitlab_role import GitlabRole
 from services.gitlab.merge_request_status import MergeRequestStatus
 
+
 class GitlabClient():
     client: Gitlab
     logger: Logger
@@ -35,10 +36,10 @@ class GitlabClient():
 
     def get_current_username(self) -> str:
         return self.client.user.attributes["username"]
-    
+
     def get_project_member(self, project: Project, user_id: int) -> ProjectMember | None:
         return project.members.get(user_id)
-    
+
     def get_role_for_member(self, project_member: ProjectMember) -> GitlabRole:
         return GitlabRole(project_member.attributes['access_level'])
 
@@ -48,7 +49,7 @@ class GitlabClient():
         if exact_rule:
             return access_level == role
         return GitlabRole(access_level).is_higher_than(role)
-    
+
     def approved_merge_request(self, merge_request: ProjectMergeRequest) -> bool:
         return self.is_merge_request_approved_by(merge_request, self.get_current_username())
 
@@ -61,7 +62,7 @@ class GitlabClient():
         if message is not None:
             merge_request.notes.create({'body': message})
         merge_request.unapprove()
-    
+
     def is_mergeable_or_future_mergeable(self, merge_request: ProjectMergeRequest) -> bool:
         merge_status: str = merge_request.attributes['detailed_merge_status']
         self.logger.debug(f'Checking merge status for merge request {merge_request.get_id()} with merge status "{merge_status}"')
@@ -85,6 +86,7 @@ class GitlabClient():
 
 
 client: GitlabClient = None
+
 
 def get_client(logger: Logger = Depends(resolve_logger(__name__)), config: Config = Depends(get_config)) -> GitlabClient:
     global client
