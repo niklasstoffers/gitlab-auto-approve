@@ -9,9 +9,10 @@
 
 <p align="center">
     <a href="https://github.com/niklasstoffers/gitlab-auto-approve/blob/main/LICENSE"><img src="https://img.shields.io/github/license/niklasstoffers/gitlab-auto-approve?color=informational" alt="license"></a>
-    <img src="https://img.shields.io/github/actions/workflow/status/niklasstoffers/gitlab-auto-approve/build">
+    <a href="https://hub.docker.com/repository/docker/niklasstoffers/gitlab-auto-approve/general"><img src="https://img.shields.io/docker/v/niklasstoffers/gitlab-auto-approve" alt="version"></a>
+    <img src="https://img.shields.io/github/actions/workflow/status/niklasstoffers/gitlab-auto-approve/build.yml" alt="build status">
+    <img src="https://img.shields.io/github/actions/workflow/status/niklasstoffers/gitlab-auto-approve/test.yml?label=test" alt="test status">
     <a href="https://github.com/niklasstoffers/gitlab-auto-approve/issues"><img src="https://img.shields.io/github/issues/niklasstoffers/gitlab-auto-approve" alt="open issues" /></a>
-    <img src="https://img.shields.io/github/last-commit/niklasstoffers/gitlab-auto-approve" alt="last commit">
     <br>
     <img src="https://img.shields.io/github/languages/top/niklasstoffers/gitlab-auto-approve?color=blueviolet" alt="top language">
     <img src="https://sloc.xyz/github/niklasstoffers/gitlab-auto-approve" alt="total lines">
@@ -68,10 +69,10 @@ If you don't want to use the [prebuilt docker image](https://hub.docker.com/r/ni
 You can also setup a new instance without using *Docker*. To do this you will need to have *Python3* installed on your machine.
 
 1. Clone the repository
-2. Configure the bot via the *src/config.yaml* file as described [here](#configuration)
+2. Configure the bot via the *autoapprove/config.yaml* file as described [here](#configuration)
 3. Run the following commands in your terminal
     ```bash
-    cd src
+    cd autoapprove
     python3 -m venv .venv
     source .venv/bin/activate
     pip install -r requirements.txt
@@ -101,7 +102,7 @@ To integrate this bot with your gitlab repository you will need Maintainer acces
 
 ## Configuration
 
-You can use the following configuration options to configure the bot to your specific needs. The bot accepts both configuration via the *src/config.yaml* file as well as environment variables. Environment variable configuration will override configuration in the *src/config.yaml* file.
+You can use the following configuration options to configure the bot to your specific needs. The bot accepts both configuration via the *autoapprove/config.yaml* file as well as environment variables. Environment variable configuration will override configuration in the *autoapprove/config.yaml* file.
 
 | Option      | Environment variable | Description |
 | ----------- | ----------- | ----------- |
@@ -116,18 +117,16 @@ You can use the following configuration options to configure the bot to your spe
 | `ssl.key_file` | `SSL__KEY_FILE` | Path to your SSL private key file |
 | `ssl.cert_file` | `SSL__CERT_FILE` | Path to your SSL certificate file |
 | `commands` | - | Section for command specific configuration |
-| `commands.approval` | - | Section for configuration options regarding the approval of merge requests |
-| `commands.approval.keyword` | `COMMANDS__APPROVAL__KEYWORD` | Keyword that the bot will scan merge request comments for |
-| `commands.approval.ignore_case` | `COMMANDS__APPROVAL__IGNORE_CASE` | If set to `true` the bot won't treat keywords case-sensitive |
-| `commands.approval.strict_match` | `COMMANDS__APPROVAL__STRICT_MATCH` | If set to `true` the bot will only approve when the comment **only** contains the keyword. If set to `false` the keyword only needs to be present in the merge request comment |
-| `commands.approval.only_for_members` | `COMMANDS__APPROVAL__ONLY_FOR_MEMBERS` | Comma-separated list of Gitlab usernames. If specified the bot will only approve when the comment author is in the username list. |
-| `commands.approval.message` | `COMMANDS__APPROVAL__MESSAGE` | Comment message that the bot will create after approving the merge request. If left empty the bot won't send a message at all. |
-| `commands.disapproval` | - | Section for configuration options regarding the disapproval of merge requests |
-| `commands.disapproval.keyword` | `COMMANDS__DISAPPROVAL__KEYWORD` | Keyword that the bot will scan merge request comments for |
-| `commands.disapproval.ignore_case` | `COMMANDS__DISAPPROVAL__IGNORE_CASE` | If set to `true` the bot won't treat keywords case-sensitive |
-| `commands.disapproval.strict_match` | `COMMANDS__DISAPPROVAL__STRICT_MATCH` | If set to `true` the bot will only disapprove when the comment **only** contains the keyword. If set to `false` the keyword only needs to be present in the merge request comment |
-| `commands.disapproval.only_for_members` | `COMMANDS__DISAPPROVAL__ONLY_FOR_MEMBERS` | Comma-separated list of Gitlab usernames. If specified the bot will only disapprove when the comment author is in the username list. |
-| `commands.disapproval.message` | `COMMANDS__DISAPPROVAL__MESSAGE` | Comment message that the bot will create after disapproving the merge request. If left empty the bot won't send a message at all. |
+| `commands.<type>` | - | Section for command type specific configuration. This configuration options are available to all commands. |
+| `commands.<type>.keyword` | `COMMANDS__<TYPE>__KEYWORD` | Keyword that the bot will scan the user comment for. |
+| `commands.<type>.ignore_case` | `COMMANDS__<TYPE>__IGNORE_CASE` | If set to `true` the bot won't treate keywords case-sensitive. |
+| `commands.<type>.strict_match` | `COMMANDS__<TYPE>__STRICT_MATCH` | If set to `true` the bot will only invoke the command when the user comment **only** contains the keyword. If set to `false` the keyword only needs to be present within the entire comment. |
+| `commands.<type>.only_for_members` | `COMMANDS__<TYPE>__ONLY_FOR_MEMBERS` | Comma-separated list of Gitlab usernames. If specified the bot will only invoke the command if the comment author is in the username list. |
+| `commands.<type>.requires_role` | `COMMANDS__<TYPE>__REQUIRES_ROLE` | Required role for the command. If specified the bot will only invoke the command if the comment author has the specified role. Can be set to `NO_ACCESS`, `MINIMAL_ACCESS`, `GUEST`, `REPORTER`, `DEVELOPER`, `MAINTAINER` or `OWNER`. |
+| `commands.<type>.message` | `COMMANDS__<TYPE>__MESSAGE` | Comment response that the bot will create after invoking the command. If left empty the bot won't send a message at all. |
+| `commands.approval` | - | Section for configuration options regarding the approval of merge requests. |
+| `commands.disapproval` | - | Section for configuration options regarding the disapproval of merge requests. |
+| `commands.merge` | - | Section for configuration options regarding merge of merge requests. |
 | `uvicorn.reload` | `UVICORN__RELOAD` | If set to `true` uvicorn will reload the server upon file change. This should be set to `false` in production environments but is a useful setting for development. |
 | `logging` | - | Section for configuration options regarding logging |
 | `logging.enable` | `LOGGING__ENABLE` | Enables logging within the application. Note that the bot also comes with startup logging which already logs before configuration is loaded. If you want to disable startup logging invoke the application with the `--disable-startup-logs` command line option. |
