@@ -1,0 +1,9 @@
+[run]
+branch = True
+source =
+    autoapprove/
+command_line = -m pytest tests
+sigterm = True
+
+[report]
+skip_empty = True
