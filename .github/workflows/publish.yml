@@ -21,6 +21,13 @@ jobs:
         check-name: 'test'
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         wait-interval: 5
+    - name: Wait for lint
+      uses: lewagon/wait-on-check-action@v1.3.1
+      with:
+        ref: ${{ github.ref }}
+        check-name: 'lint'
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        wait-interval: 5
     - name: Download build artifacts
       uses: dawidd6/action-download-artifact@v3
       with:

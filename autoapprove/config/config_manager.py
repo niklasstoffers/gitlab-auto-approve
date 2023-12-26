@@ -7,6 +7,7 @@ from config.environment_loader import load_environment
 
 _config: Config | None = None
 
+
 def _load_config(filename: str, logger: Logger) -> Config:
     try:
         logger.info('Loading configuration from file "%s"', filename)
@@ -19,9 +20,11 @@ def _load_config(filename: str, logger: Logger) -> Config:
         logger.error('Failed to load configuration', exc_info=e)
         raise Exception("Failed to load configuration file. Please check your settings")
 
+
 def init(filename: str, logger: Logger):
     global _config
     _config = _load_config(filename, logger)
+
 
 def get_config() -> Config:
     if _config is None:

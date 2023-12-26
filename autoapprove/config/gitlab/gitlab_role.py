@@ -3,6 +3,7 @@ from services.gitlab.gitlab_role import GitlabRole as Role
 
 ROLE_MAPPINGS = dict()
 
+
 class GitlabRole(str, Enum):
     NO_ACCESS = 'NO_ACCESS'
     MINIMAL_ACCESS = 'MINIMAL_ACCESS'
@@ -14,6 +15,7 @@ class GitlabRole(str, Enum):
 
     def get_role(self):
         return ROLE_MAPPINGS[self]
+
 
 ROLE_MAPPINGS[GitlabRole.NO_ACCESS] = Role.NO_ACCESS
 ROLE_MAPPINGS[GitlabRole.MINIMAL_ACCESS] = Role.MINIMAL_ACCESS

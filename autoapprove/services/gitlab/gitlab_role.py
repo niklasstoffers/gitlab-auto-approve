@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class GitlabRole(Enum):
     NO_ACCESS = 0
     MINIMAL_ACCESS = 5

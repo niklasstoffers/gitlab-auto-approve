@@ -1,0 +1,20 @@
+name: LINT
+
+on: [push]
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Wait for build
+      uses: lewagon/wait-on-check-action@v1.3.1
+      with:
+        ref: ${{ github.ref }}
+        check-name: 'build'
+        repo-token: ${{ secrets.GITHUB_TOKEN }}
+        wait-interval: 5
+    - name: Run lint
+      run: |
+        ./ci_run_lint.sh

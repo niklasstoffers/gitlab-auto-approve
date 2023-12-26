@@ -2,6 +2,7 @@ from logging import Logger, FileHandler, StreamHandler, NullHandler
 from helpers.logging.formatter import default_formatter
 from sys import stdout
 
+
 def create_logger(logger: Logger, level: int, use_console: bool, use_file: bool, file: str) -> Logger:
     logger.setLevel(level)
     if use_console:

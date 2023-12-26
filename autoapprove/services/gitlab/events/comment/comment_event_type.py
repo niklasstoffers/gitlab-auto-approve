@@ -1,5 +1,6 @@
 from enum import Enum
 
+
 class CommentEventType(str, Enum):
     NONE: str = "none"
     COMMIT: str = "commit"
