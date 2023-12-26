@@ -26,6 +26,9 @@ jobs:
         name: ${{ github.head_ref }}.${{ github.sha }}
         path: /tmp/
         if_no_artifact_found: fail
+    - name: List images
+      run: |
+        docker image ls
     - name: Run tests
       run: |
         docker load --input /tmp/image.tar
