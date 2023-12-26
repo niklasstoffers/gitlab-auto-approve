@@ -15,7 +15,7 @@ jobs:
       with:
         context: .
         file: ./Dockerfile
-        labels: gitlab-auto-approve
+        tags: gitlab-auto-approve:latest
         outputs: type=docker,dest=/tmp/image.tar
     - name: Save artifacts
       id: save-artifacts
