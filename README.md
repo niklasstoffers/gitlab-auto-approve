@@ -12,6 +12,7 @@
     <a href="https://hub.docker.com/repository/docker/niklasstoffers/gitlab-auto-approve/general"><img src="https://img.shields.io/docker/v/niklasstoffers/gitlab-auto-approve" alt="version"></a>
     <img src="https://img.shields.io/github/actions/workflow/status/niklasstoffers/gitlab-auto-approve/build.yml" alt="build status">
     <img src="https://img.shields.io/github/actions/workflow/status/niklasstoffers/gitlab-auto-approve/test.yml?label=test" alt="test status">
+    <a href="https://codecov.io/gh/niklasstoffers/gitlab-auto-approve"><img src="https://codecov.io/gh/niklasstoffers/gitlab-auto-approve/graph/badge.svg" alt="code coverage"/> </a>
     <a href="https://github.com/niklasstoffers/gitlab-auto-approve/issues"><img src="https://img.shields.io/github/issues/niklasstoffers/gitlab-auto-approve" alt="open issues" /></a>
     <br>
     <img src="https://img.shields.io/badge/python_version-3.12-blue" alt="python version">

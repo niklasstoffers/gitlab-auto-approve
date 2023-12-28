@@ -1,0 +1,10 @@
+codecov:
+  bot: "codecov"
+  max_report_age: 24
+  require_ci_to_pass: yes
+
+cogerage:
+  range: "80...100"
+
+github_checks:
+  annotations: true
