@@ -4,4 +4,5 @@ docker run --entrypoint /bin/sh -v "./tests:/tests" -v "./coverage_report:/cover
     "cd / && \
      pip install -r tests/requirements.txt && \
      coverage run && \
-     mv .coverage coverage_report"
+     coverage xml && \
+     mv coverage.xml coverage_report"
