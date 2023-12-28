@@ -7,3 +7,4 @@ sigterm = True
 
 [report]
 skip_empty = True
+show_missing = True
