@@ -14,20 +14,24 @@
     <img src="https://img.shields.io/github/actions/workflow/status/niklasstoffers/gitlab-auto-approve/test.yml?label=test" alt="test status">
     <a href="https://github.com/niklasstoffers/gitlab-auto-approve/issues"><img src="https://img.shields.io/github/issues/niklasstoffers/gitlab-auto-approve" alt="open issues" /></a>
     <br>
+    <img src="https://img.shields.io/badge/python_version-3.12-blue" alt="python version">
     <img src="https://img.shields.io/github/languages/top/niklasstoffers/gitlab-auto-approve?color=blueviolet" alt="top language">
     <img src="https://sloc.xyz/github/niklasstoffers/gitlab-auto-approve" alt="total lines">
     <a href="https://www.codefactor.io/repository/github/niklasstoffers/gitlab-auto-approve"><img src="https://www.codefactor.io/repository/github/niklasstoffers/gitlab-auto-approve/badge" alt="code quality" /></a>
 </p>
 
-**Gitlab Auto Approve** is a [Gitlab](https://about.gitlab.com/) bot for automatically approving merge requests. It's built based on [FastAPI](https://fastapi.tiangolo.com/).
+**Gitlab Auto Approve** is a [Gitlab](https://about.gitlab.com/) bot for managing merge requests. It includes features such as approval and disapproval of merge requests via merge request comments or automatic merging. It's built based on [FastAPI](https://fastapi.tiangolo.com/).
 
 ## IMPORTANT
 
-**This bot is still in development. Version v0.1.0 will be out soon**
+**This bot is still in development. Version v0.1.0 will be out soon.**
 
 ## Features
 
-This bot currently only supports automatic approval and disapproval of merge requests upon receiving configureable user comments within the gitlab merge request. If you are missing further features please [open a new issue](https://github.com/niklasstoffers/gitlab-auto-approve/issues/new).
+- Approval and disapproval of merge requests via configureable merge request comments.
+- Merging of a merge requests via configureable merge request comments.
+
+If you are missing further features please [open a new issue](https://github.com/niklasstoffers/gitlab-auto-approve/issues/new).
 
 ## Compatibility
 
@@ -100,9 +104,21 @@ To integrate this bot with your gitlab repository you will need Maintainer acces
 </p>
 <br>
 
+## CLI Options
+
+When starting the bot you can use a number of CLI options to configure the bot to your needs. These options primarily alter the behavior during the bots startup phase (before configuration from the yaml file has been loaded).
+
+| Option      | Description |
+| ----------- | ----------- |
+| `-c, --config` | Path to config file. Default is `config.yaml` |
+| `--startup-log-level` | Specifies the log level to use during startup. Default is `INFO` |
+| `--disable-startup-logs` | Disables startup logs. Default is `false` |
+| `--disable-startup-file-logs` | Disables writing startup logs to a file. Default is `false` |
+| `--startup-log-file` | Specifies the log file which will be used for startup file logs. Default is `startup.log` |
+
 ## Configuration
 
-You can use the following configuration options to configure the bot to your specific needs. The bot accepts both configuration via the *autoapprove/config.yaml* file as well as environment variables. Environment variable configuration will override configuration in the *autoapprove/config.yaml* file.
+You can use the following configuration options to configure the bot to your specific needs. The bot accepts both configuration via the *autoapprove/config.yaml* file as well as environment variables. Environment variable configuration will override configuration in the *autoapprove/config.yaml* file. If you're running the bot using docker, most of the options below will be supplied with default values. To configure the bot when running with docker you can either use environment variables or mount a configuration file into the container and override the configuration file path with the `--config` CLI option.
 
 | Option      | Environment variable | Description |
 | ----------- | ----------- | ----------- |
