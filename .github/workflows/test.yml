@@ -31,5 +31,7 @@ jobs:
         docker load --input /tmp/image.tar
         ./ci_run_tests.sh
     - name: Upload coverage reports
-      uses: codecov/codecov-action@v4
+      uses: codecov/codecov-action@v3
+      with:
+        fail_ci_if_error: true
       
