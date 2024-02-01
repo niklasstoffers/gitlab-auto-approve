@@ -2,5 +2,5 @@ fastapi==0.108.0
 pydantic==2.5.3
 PyYAML==6.0.1
 uvicorn==0.27.0.post1
-python-gitlab==4.2.0
+python-gitlab==4.4.0
 cryptography==41.0.7
